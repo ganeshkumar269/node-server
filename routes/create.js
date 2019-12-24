@@ -2,7 +2,7 @@ var MongoClient = require('mongodb').MongoClient;
 var bodyParser = require('body-parser');
 var uri = require("../util/mymongodbURI.js")
 
-const client = new MongoClient(uri,{useNewUrlParser:true});
+const client = new MongoClient(uri,{useNewUrlParser:true,useUnifiedTopology: true });
 var userExists = require('../util/userExists');
 
 

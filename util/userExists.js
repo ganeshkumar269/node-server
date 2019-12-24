@@ -1,7 +1,7 @@
 const HOME = "../"
 var uri = require('../util/mymongodbURI');
 var Mongoclient = require('../node_modules/mongodb').MongoClient;
-const client = new Mongoclient(uri,{useNewUrlParser:true});
+const client = new Mongoclient(uri,{useNewUrlParser:true, useUnifiedTopology: true});
 
 module.exports = (username,callbackOnResolve,callbackOnReject)=>{
     client.connect()

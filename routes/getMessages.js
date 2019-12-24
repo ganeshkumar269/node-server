@@ -4,7 +4,7 @@ var MongoClient = require('mongodb').MongoClient;
 
 
 var uri = require("../util/mymongodbURI.js")
-const client = new MongoClient(uri,{useNewUrlParser:true});
+const client = new MongoClient(uri,{useNewUrlParser:true,useUnifiedTopology: true });
 var userExists = require('../util/userExists');
 
 
@@ -21,8 +21,8 @@ module.exports = (request,response)=>{ // request.username , header.authorizatio
         const token = request.token;
         jwt.verify(token,"secretkey",(err,authData)=>{
             if(err){
-                console.log("getMessages.js:Token Verification failed , err" + err);
-                respose.json({status:403,message:"Token Verification failed"});
+                console.log("getMessages.js:Token Verification failed , err: " + err);
+                response.json({status:403,message:"Token Verification failed"});
             } else {
                 console.log(authData);
                 userExists(user.username, msg =>{
@@ -61,7 +61,7 @@ module.exports = (request,response)=>{ // request.username , header.authorizatio
                     }
                 },msg =>{
                     console.log(msg);
-                    res.status(500).send("Internal Error")
+                    response.json({status:500,message:"Internal Error"});
                 });
             }
         });

@@ -4,12 +4,12 @@ var MongoClient = require('mongodb').MongoClient;
 
 
 var uri = require("../util/mymongodbURI.js")
-const client = new MongoClient(uri,{useNewUrlParser:true});
+const client = new MongoClient(uri,{useNewUrlParser:true,useUnifiedTopology: true});
 var userExists = require('../util/userExists');
 
 
 
-module.exports = (request,response) => {
+module.exports = (request,response,next) => {
     jwt.verify(request.token,'secretkey',(err,authData)=>{
         if(err){
             console.log("sendMessage.js: token verification failed " + err)
