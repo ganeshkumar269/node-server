@@ -49,7 +49,7 @@ module.exports = async(doc)=>{
                 .updateOne({userId:senderInfo.userId},
                         {$push:{"pastConv":{convId:conv.convId,lastUsed:timestamp}}}
                 )])
-            return convId
+            return conv.convId
         }catch(err){
             console.log("createMessage.js:Try-Catch, err "+ err)
             throw err
