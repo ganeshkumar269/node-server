@@ -64,17 +64,20 @@ module.exports = async(doc)=>{
             creatorUserId:senderInfo.userId,
             body:doc.message,
             timestamp:timestamp
-        }) 
+        }),
         client.db('User-Data')
         .collection('User-Info')
         .updateOne({userId:recieverInfo.userId},
                 {"pastConv":{$elemMatch:{convId:doc.convId}}},
-                {$set:{"mails.$.lastUsed":timestamp}})
+                {$set:{"mails.$.lastUsed":timestamp}}
+        ),
 
         client.db('User-Data')
         .collection('User-Info')
         .updateOne({userId:senderInfo.userId},
                 {"pastConv":{$elemMatch:{convId:doc.convId}}},
-                {$set:{"mails.$.lastUsed":timestamp}})
+                {$set:{"mails.$.lastUsed":timestamp}}
+        )
+        return doc.convId
     }
 }
