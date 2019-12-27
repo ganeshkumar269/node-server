@@ -25,28 +25,35 @@ module.exports = async(doc)=>{
             console.log("createMessage.js: Failed await createConversation")
             throw err
         }
-        await client.connect()
-        client.db('User-Data')
-        .collection('Messages')
-        .insertOne({
-            convId:conv.convId,
-            msgId:new ObjectID().toHexString(),
-            creatorUserId:senderInfo.userId,
-            body:doc.message,
-            timestamp:timestamp
-        })
+        try{
+            await client.connect()
+            await Promise.all([
+                client.db('User-Data')
+                .collection('Messages')
+                .insertOne({
+                    convId:conv.convId,
+                    msgId:new ObjectID().toHexString(),
+                    creatorUserId:senderInfo.userId,
+                    body:doc.message,
+                    timestamp:timestamp
+                }),
 
-        client.db('User-Data')
-        .collection('User-Info')
-        .updateOne({userId:recieverInfo.userId},
-                {$push:{"pastConv":{convId:conv.convId,lastUsed:timestamp}}}
-        )
+                client.db('User-Data')
+                .collection('User-Info')
+                .updateOne({userId:recieverInfo.userId},
+                        {$push:{"pastConv":{convId:conv.convId,lastUsed:timestamp}}}
+                ),
 
-        client.db('User-Data')
-        .collection('User-Info')
-        .updateOne({userId:senderInfo.userId},
-                {$push:{"pastConv":{convId:conv.convId,lastUsed:timestamp}}}
-        )
+                client.db('User-Data')
+                .collection('User-Info')
+                .updateOne({userId:senderInfo.userId},
+                        {$push:{"pastConv":{convId:conv.convId,lastUsed:timestamp}}}
+                )])
+            return convId
+        }catch(err){
+            console.log("createMessage.js:Try-Catch, err "+ err)
+            throw err
+        }
     } else {
         await client.connect()
         client.db('User-Data')

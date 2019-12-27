@@ -33,12 +33,12 @@ module.exports = async (request,response)=>{
             message:request.body.message
         }
         try{
-            createMessage(doc);
+            var convId = await createMessage(doc);
+            response.json({status:200,convId:convId})
         }catch(err){
             console.log("sendMessage.js: Error in createMessage, err " + err)
             response.json({status:500})    
         } 
-        response.json({status:200})
     }else{  // r-user doesnt exist
         console.log("sendMessages.js:R-User doenst exist")
         response.json({status:401,message:"R-User Doesnt Exist"})
