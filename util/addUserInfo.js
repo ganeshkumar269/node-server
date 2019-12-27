@@ -1,3 +1,5 @@
+require('module-alias/register')
+
 var uri = require("@mymongodbURI")
 var MongoClient = require('mongodb').MongoClient;
 

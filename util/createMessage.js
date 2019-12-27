@@ -1,3 +1,5 @@
+require('module-alias/register')
+
 //importing packages
 var MongoClient = require('mongodb').MongoClient
 var ObjectID = require('mongodb').ObjectID
