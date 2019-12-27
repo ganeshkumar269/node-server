@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start":"node main.js"
+    "start": "node main.js"
   },
   "repository": {
     "type": "git",
@@ -25,6 +25,21 @@
     "ddos": "^0.2.1",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
+    "module-alias": "^2.2.2",
     "mongodb": "^3.4.1"
+  },
+  "_moduleAliases": {
+    "@mymongodbURI": "util/mymongodbURI.js",
+    "@createConversation": "util/createConversation.js",
+    "@getUserInfo": "util/getUserInfo.js",
+    "@userExists" : "util/userExists",
+    "@conversationExists":"util/conversationExists.js",
+    "@Conversation":"classes/Conversation.js",
+    "@getPastConv":"util/getPastConv.js",
+    "@addUserCredentials":"util/addUserCredentials",
+    "@stringHasher":"util/stringHasher.js",
+    "@getUserCredentials":"util/getUserCredentials.js",
+    "@authenticateUser":"util/authenticateUser.js",
+    "@createMessage":"util/createMessage.js"
   }
 }

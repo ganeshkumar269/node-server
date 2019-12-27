@@ -1,70 +1,46 @@
+//importing packages
+require('module-alias/register')
 var bodyParser = require('body-parser');
 var jwt = require('jsonwebtoken');
-var MongoClient = require('mongodb').MongoClient;
+
+//importing custom files
+var userExists = require('@userExists')
+var createMessage = require("@createMessage")
 
 
-var uri = require("../util/mymongodbURI.js")
-const client = new MongoClient(uri,{useNewUrlParser:true,useUnifiedTopology: true});
-var userExists = require('../util/userExists');
+//declaring app variables
 
 
-
-module.exports = (request,response,next) => {
-    jwt.verify(request.token,'secretkey',(err,authData)=>{
-        if(err){
-            console.log("sendMessage.js: token verification failed " + err)
-            response.json({status:401,message:"Token Verification failed"})
+module.exports = async (request,response)=>{
+    try{
+        var authData = jwt.verify(request.token,"secretkey")
+    }catch(err){
+        console.log("sendMessage.js: err, "+err)
+        response.json({status:400,message:"Invalid Token"})
+    }
+    try{
+        var t = await userExists(request.body.username)
+    }catch(err){
+        console.log("sendMessage.js: await userExists, err " + err)
+        response.json({status:500})
+    }
+    if(t == true){
+        var t = request.headers['convid']
+        var doc = {
+            convId:t,
+            sender:authData.user.username,
+            reciever:request.body.username,
+            message:request.body.message
         }
-        else {
-            console.log("Token Verified");
-            userExists(request.body.username, message => {
-                    if(message === true){
-                        var timestamp = Date.now();
-                        const senderData = {
-                            message:request.body.message,
-                            reciever:request.body.username,
-                            timestamp:timestamp
-                        }
-                        const recieverData = {
-                            message:request.body.message,
-                            sender:authData.user.username,
-                            timestamp:timestamp
-                        }
-                        client.connect().then( db=>{
-                            client
-                            .db(authData.user.username)
-                            .collection("sent")
-                            .insertOne(senderData)
-                            .then( res =>{
-                                console.log("sendMessage.js:Message -s saved " + res);
-                                client
-                                    .db(request.body.username)
-                                    .collection("recieved")
-                                    .insertOne(recieverData)
-                                    .then(res=>{
-                                        console.log("sendMessage.js:Message -r saved " + res);
-                                    })
-                                    .catch(err =>{
-                                        console.log("sendMessage.js:Message -r save failed " + err);
-
-                                    })
-                            })
-                            .catch(err=>{
-                                console.log("sendMessage.js:Message -s save failed " + err);
-
-                            })
-                        })
-                        .catch(err=>{
-                            console.log("sendMessage.js: Error connecting to mongo " + err)
-                            response.json({status:500,message:"Internal Error"});
-                        })
-                        response.json({status:200,message:'Message Sent Successfully'});
-                    } else {
-                        response.json({status:401,message:'Message Sent Unsuccessful, Reciever doesnt Exist'});
-                    }
-                } , message => {
-                    console.log(message);
-                    response.json({status:500,message:"Internal Error"});
-                })
-        }});
+        try{
+            createMessage(doc);
+        }catch(err){
+            console.log("sendMessage.js: Error in createMessage, err " + err)
+            response.json({status:500})    
+        } 
+        response.json({status:200})
+    }else{  // r-user doesnt exist
+        console.log("sendMessages.js:R-User doenst exist")
+        response.json({status:401,message:"R-User Doesnt Exist"})
+    }
 }

@@ -1,3 +1,4 @@
+require('module-alias/register')
 var express = require('express');
 var bodyParser = require('body-parser');
 var Ddos = require('ddos')

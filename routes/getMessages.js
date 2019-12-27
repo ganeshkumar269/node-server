@@ -1,69 +1,64 @@
+//importing packages
 var bodyParser = require('body-parser');
 var jwt = require('jsonwebtoken');
 var MongoClient = require('mongodb').MongoClient;
 
 
-var uri = require("../util/mymongodbURI.js")
-const client = new MongoClient(uri,{useNewUrlParser:true,useUnifiedTopology: true });
-var userExists = require('../util/userExists');
+
+//importing custom files
+var uri = require("@mymongodbURI")
+var userExists = require('@userExists')
+var convExists = require('@conversationExists')
+var getPastConv = require('@getPastConv')
 
 
+//Declaring App variables
+const client = new MongoClient(uri,{useNewUrlParser:true,useUnifiedTopology: true})
 
-module.exports = (request,response)=>{ // request.username , header.authorization - token
+
+module.exports = async (request,response)=>{ // request.username , header.authorization - token
     console.log("Request Arrived");
-    const user = request.query;
-    console.log(user);
     response.setHeader('Content-Type','application/json');
-    if(typeof user.username === 'undefined' || user.username == '' || user.password == ''){
-        console.log("getMessages.js: Invalid inputs , user: " + user);
-        response.json({status:403,message:'Invalid Inputs'});
-    } else {
-        const token = request.token;
-        jwt.verify(token,"secretkey",(err,authData)=>{
-            if(err){
-                console.log("getMessages.js:Token Verification failed , err: " + err);
-                response.json({status:403,message:"Token Verification failed"});
-            } else {
-                console.log(authData);
-                userExists(user.username, msg =>{
-                    if( msg === true){
-                        client.connect()
-                        .then(db=>{
-                            client.db(authData.user.username)
-                            .collection('recieved')
-                            .find({"sender" : user.username})
-                            .toArray()
-                            .then(res=>{
-                                if(res.length == 0){
-                                    console.log("getMessages.js: messages empty")
-                                    response.json({status:400,messages:"messages empty"})
-                                } else {
-                                    var messageJSON = {
-                                        'messages' : []
-                                    };
-                                    res.forEach(element => {
-                                        messageJSON['messages'].push(element);
-                                    });
-                                    response.json({status:200,message:"Retrieved Messages succesfully",data:messageJSON})
-                                }
-                            })
-                            .catch(err=>{
-                                console.log("getMessages.js: mongodb error, err " + err)
-                                response.json({status:500,message:"Internal DB error"});
-                            })
-                        })
-                        .catch(err=>{
-                            console.log("getMessages.js: Connection to MongoDB failed, err" + err);
-                            response.json({status:500,message:"Internal Error"})
-                        })
-                    } else {
-                        response.json({status:404,message:"Reciever doesnt exist"});
-                    }
-                },msg =>{
-                    console.log(msg);
-                    response.json({status:500,message:"Internal Error"});
-                });
+    const token = request.token;
+    const convId = request.headers['convid']
+    try {
+        var authData = jwt.verify(token,"secretkey") 
+        if( convId == undefined){ 
+            try{
+                var t = await getPastConv(authData.user.username)
+                response.json({status:200,pastConv:t})
+            }catch(err){
+                console.log("getMessages.js:Try-Catch, err " + err)
+                response.json({status:500})
             }
-        });
+        }else {
+            await client.connect()
+            client.db('User-Data')
+            .collection('Messages')
+            .find({"convId" : convId})
+            .limit(100)
+            .toArray()
+            .then(res=>{
+                if(res.length == 0){
+                    console.log("getMessages.js: messages empty")
+                    response.json({status:400,messages:"messages empty"})
+                } else {
+                    var messageJSON = {
+                        'messages' : []
+                    }
+                    res.forEach(element => {
+                        messageJSON['messages'].push(element);
+                    })
+                    console.log("getMessages.js: Retrieved Messages succesfully")
+                    response.json({status:200,message:"Retrieved Messages succesfully",data:messageJSON})
+                }
+            })
+            .catch(err=>{
+                console.log("getMessages.js: mongodb error, err " + err)
+                response.json({status:500,message:"Internal DB error"});
+            })
+        }
+    }catch(err){
+        console.log("getMessages: Try-Catch ,err " + err);
     }
 }

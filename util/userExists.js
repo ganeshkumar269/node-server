@@ -1,24 +1,28 @@
-const HOME = "../"
-var uri = require('../util/mymongodbURI');
-var Mongoclient = require('../node_modules/mongodb').MongoClient;
+var uri = require('@mymongodbURI');
+var Mongoclient = require('mongodb').MongoClient;
 const client = new Mongoclient(uri,{useNewUrlParser:true, useUnifiedTopology: true});
 
-module.exports = (username,callbackOnResolve,callbackOnReject)=>{
-    client.connect()
-    .then(db=>{
-        client
-        .db("expressDemo")
-        .collection("loginCredentials")
-        .find({"username":username},{_id:0}).limit(1).toArray()
+module.exports = async (username)=>{
+    try{
+        await client.connect()
+        return client
+        .db("User-Data")
+        .collection("Credentials")
+        .find({"username":username},{_id:0,userId:0,hashedPassword:0})
+        .limit(1)
+        .toArray()
         .then(res=>{
-            console.log("userExists.js: Type of response : " + typeof res);
-            console.log(res.length);
+            console.log("userExists.js: userExists? :" + res.length);
             if(res.length < 1)
-                callbackOnResolve(false);
+                return false              
             else 
-                callbackOnResolve(true);
+                return true                
+        }).catch(err=>{
+            console.log("userExists.js: Failed to find Credentials")
+            throw err
         })
-        .catch(err=>callbackOnReject("userExists.js: Error occured: " + err));
-    })
-    .catch(err=>callbackOnReject("userExists.js: Error occured: " + err))
+    }catch(err){
+        console.log("userExists.js: Try-Catch")
+        throw err
+    }
 }
