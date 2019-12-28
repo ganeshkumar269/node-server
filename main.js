@@ -15,7 +15,7 @@ var authorize = require('./util/authorizeHeadersForExpress.js')
 var uri = require("@mymongodbURI")
 var options = { promiseLibrary: Promise,
                 useNewUrlParser:true,
-                useUnifiedTopology: true,keepAlive: 1, 
+                keepAlive: 1, 
                 connectTimeoutMS: 30000, 
                 reconnectTries: 30, 
                 reconnectInterval: 5000
