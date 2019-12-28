@@ -1,2 +1,2 @@
-module.exports = "mongodb+srv://ganesh:mmmmmmmm@cluster0-1pjm1.mongodb.net/test?retryWrites=true&w=majority"
+module.exports = "mongodb+srv://ganesh:mmmmmmmm@cluster0-1pjm1.mongodb.net/test?retryWrites=true&w=majority,ganesh:mmmmmmmm@cluster0-shard-00-01-1pjm1.mongodb.net:27017,ganesh:mmmmmmmmcluster0-shard-00-02-1pjm1.mongodb.net:27017"
 // "mongodb://127.0.0.1:27017"
