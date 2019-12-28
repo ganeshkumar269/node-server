@@ -13,7 +13,14 @@ var ddos = new Ddos({burst:5, limit:15})
 //importing utility functions
 var authorize = require('./util/authorizeHeadersForExpress.js')
 var uri = require("@mymongodbURI")
-var client = new MongoClient(uri, { promiseLibrary: Promise ,useNewUrlParser:true,useUnifiedTopology: true})
+var options = { promiseLibrary: Promise,
+                useNewUrlParser:true,
+                useUnifiedTopology: true,keepAlive: 1, 
+                connectTimeoutMS: 30000, 
+                reconnectTries: 30, 
+                reconnectInterval: 5000
+              }
+var client = new MongoClient(uri, options)
 
 
 //importing route handlers
