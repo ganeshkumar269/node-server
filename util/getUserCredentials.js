@@ -10,18 +10,10 @@ var uri = require("@mymongodbURI")
 
 
 //declaring app variables
-const client = new MongoClient(uri,{useNewUrlParser:true,useUnifiedTopology: true });
 
 
-module.exports = async (username)=>{
-    try{
-        await client.connect()               
-    }catch(err){
-        console.log("getUserCredentials.js: MongoDB failed to connect")
-        throw err
-    }   
+module.exports = async (client,username)=>{   
     return client
-    .db('User-Data')
     .collection('Credentials')
     .find({"username":username},{_id:0,userId:0})
     .limit(1).toArray()

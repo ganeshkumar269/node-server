@@ -1,19 +1,15 @@
 require('module-alias/register')
 var uri = require("@mymongodbURI")
-var MongoClient = require('mongodb').MongoClient;
 
-const client = new MongoClient(uri,{useNewUrlParser:true,useUnifiedTopology: true });
+// const client = new MongoClient(uri,{useNewUrlParser:true,useUnifiedTopology: true });
 
-module.exports = async (user)=>{
-    await client.connect()
+module.exports = async (client,user)=>{
     client
-    .db("User-Data")
     .collection("Credentials")
     .insertOne(user)
     .then(msg=>{
             console.log(`Successfully inserted ${user.username} credentials`)
             client
-            .db('User-Data')
             .collection('User-Info')
             .insertOne({
                 userId:user.userId,

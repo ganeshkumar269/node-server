@@ -1,7 +1,7 @@
 //importing packages
 var bodyParser = require('body-parser');
 var jwt = require('jsonwebtoken');
-var MongoClient = require('mongodb').MongoClient;
+// var MongoClient = require('mongodb').MongoClient;
 
 
 
@@ -13,11 +13,12 @@ var getPastConv = require('@getPastConv')
 
 
 //Declaring App variables
-const client = new MongoClient(uri,{useNewUrlParser:true,useUnifiedTopology: true})
+// const client = new MongoClient(uri,{useNewUrlParser:true,useUnifiedTopology: true})
 
 
 module.exports = async (request,response)=>{ // request.username , header.authorization - token
-    console.log("Request Arrived");
+    console.log("getMessages.js: Request Arrived")
+    const client = request.app.locals.db
     response.setHeader('Content-Type','application/json');
     const token = request.token;
     const convId = request.headers['convid']
@@ -25,15 +26,14 @@ module.exports = async (request,response)=>{ // request.username , header.author
         var authData = jwt.verify(token,"secretkey") 
         if( convId == undefined){ 
             try{
-                var t = await getPastConv(authData.user.username)
+                var t = await getPastConv(client,authData.user.username)
                 response.json({status:200,pastConv:t})
             }catch(err){
                 console.log("getMessages.js:Try-Catch, err " + err)
                 response.json({status:500})
             }
         }else {
-            await client.connect()
-            client.db('User-Data')
+            client
             .collection('Messages')
             .find({"convId" : convId})
             .limit(100)

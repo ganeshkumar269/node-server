@@ -13,12 +13,13 @@ var authenticateUser = require("@authenticateUser")
 
 module.exports = async (req,response)=>{
     var user = req.body;
+    const client = req.app.locals.db
     console.log("Incoming login request");
     try{
-        var t = await userExists(user.username)
+        var t = await userExists(client,user.username)
         if(t === true){   
             try{
-                var o = await authenticateUser(user)
+                var o = await authenticateUser(client,user)
             }catch(err){
                 console.log("login.js: Failed await authenticateUser, err " + err)
                 response.json({status:500})

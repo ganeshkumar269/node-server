@@ -11,12 +11,12 @@ var stringHasher = require('@stringHasher')
 
 
 //declaring app variables
-const client = new MongoClient(uri,{useNewUrlParser:true,useUnifiedTopology: true });
+// const client = new MongoClient(uri,{useNewUrlParser:true,useUnifiedTopology: true });
 
 
-module.exports = async (user)=>{
+module.exports = async (client,user)=>{
     try {
-        var t = await getUserCredentials(user.username)
+        var t = await getUserCredentials(client,user.username)
     }catch(err){
         console.log("authenticateUser.js: Failed await getUserCrendentials, err "+ err)
         throw err

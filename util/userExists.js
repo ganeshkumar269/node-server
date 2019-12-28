@@ -1,12 +1,9 @@
 var uri = require('@mymongodbURI');
 var Mongoclient = require('mongodb').MongoClient;
-const client = new Mongoclient(uri,{useNewUrlParser:true, useUnifiedTopology: true});
 
-module.exports = async (username)=>{
+module.exports = async (client,username)=>{
     try{
-        await client.connect()
         return client
-        .db("User-Data")
         .collection("Credentials")
         .find({"username":username},{_id:0,userId:0,hashedPassword:0})
         .limit(1)

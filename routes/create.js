@@ -17,6 +17,7 @@ const client = new MongoClient(uri,{useNewUrlParser:true,useUnifiedTopology: tru
 module.exports = async (request,response) => {
     console.log("Incoming create Request");
     const user = request.body;
+    const client = request.app.locals.db
     if(user.username == undefined || user.username == "" || user.password == ""){
         console.log("create.js: Invalid Inputs, empty strings not allowed")
         response.json({status:401,message:"Invalid input"})
@@ -24,7 +25,7 @@ module.exports = async (request,response) => {
         console.log(user);
         response.setHeader('Content-Type','application/json');
         try{
-            var t = await userExists(user.username)
+            var t = await userExists(client,user.username)
         }catch(err){
             console.log("create.js: Failed await userExists, err " + err)
             response.json({status:500})
@@ -39,7 +40,7 @@ module.exports = async (request,response) => {
             }
             console.log("Username isnt in DB, inserting user to DB")
             try {
-                var res = await addUserCredentials(userData)
+                var res = await addUserCredentials(client,userData)
             }catch(err){
                 console.log("create.js:  Try-Catch, err " + err)
                 response.json({status:500,message:"Internal Error"})

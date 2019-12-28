@@ -12,6 +12,7 @@ var createMessage = require("@createMessage")
 
 
 module.exports = async (request,response)=>{
+    const client = request.app.locals.db
     try{
         var authData = jwt.verify(request.token,"secretkey")
     }catch(err){
@@ -19,7 +20,7 @@ module.exports = async (request,response)=>{
         response.json({status:400,message:"Invalid Token"})
     }
     try{
-        var t = await userExists(request.body.username)
+        var t = await userExists(client,request.body.username)
     }catch(err){
         console.log("sendMessage.js: await userExists, err " + err)
         response.json({status:500})
@@ -33,7 +34,7 @@ module.exports = async (request,response)=>{
             message:request.body.message
         }
         try{
-            var convId = await createMessage(doc);
+            var convId = await createMessage(client,doc);
             response.json({status:200,convId:convId})
         }catch(err){
             console.log("sendMessage.js: Error in createMessage, err " + err)

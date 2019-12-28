@@ -3,7 +3,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var Ddos = require('ddos')
 var cors = require('cors')
-
+var MongoClient = require('mongodb').MongoClient
 
 // App variables
 var app = express();
@@ -12,6 +12,8 @@ var ddos = new Ddos({burst:5, limit:15})
 
 //importing utility functions
 var authorize = require('./util/authorizeHeadersForExpress.js')
+var uri = require("@mymongodbURI")
+var client = new MongoClient(uri, { promiseLibrary: Promise ,useNewUrlParser:true,useUnifiedTopology: true})
 
 
 //importing route handlers
@@ -43,7 +45,10 @@ app.options("*",cors())
 
 
 //GET methods
-app.get('/',(q,s) => s.end("<h1> Welcome to CLC</h1>"));    
+app.get('/',async (q,s) => {
+    console.log("Home Page Request Arrived")
+    s.send("<h1>Hello, World!</h1>")
+})
 app.get('/api/v1/getMessages',splitToken,getMessagesHandler);
 app.get('/api/v1/ping',splitToken,pingHandler);
 
@@ -55,4 +60,11 @@ app.post('/api/v1/sendMessage',splitToken,sendMessageHandler);
 
 
 //Listener
-app.listen(process.env.PORT || 3000,err=>console.log("Listening to port 3000"))
+client.connect()
+  .catch(err => console.error(err.stack))
+  .then(db => {
+    app.locals.db = client.db('User-Data');
+    app.listen(process.env.PORT || 3000, () => {
+      console.log(`Node.js app is listening at http://localhost:3000`);
+    });
+  });
