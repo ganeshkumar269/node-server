@@ -29,7 +29,7 @@ module.exports = async(client,doc)=>{
         }
         try{
             await Promise.all([
-                client
+                client.db('User-Data')
                 .collection('Messages')
                 .insertOne({
                     convId:conv.convId,
@@ -39,13 +39,13 @@ module.exports = async(client,doc)=>{
                     timestamp:timestamp
                 }),
 
-                client
+                client.db('User-Data')
                 .collection('User-Info')
                 .updateOne({userId:recieverInfo.userId},
                         {$push:{"pastConv":{convId:conv.convId,lastUsed:timestamp}}}
                 ),
 
-                client
+                client.db('User-Data')
                 .collection('User-Info')
                 .updateOne({userId:senderInfo.userId},
                         {$push:{"pastConv":{convId:conv.convId,lastUsed:timestamp}}}
@@ -57,7 +57,7 @@ module.exports = async(client,doc)=>{
         }
     } else {
         try {
-        client
+        client.db('User-Data')
         .collection('Messages')
         .insertOne({
             convId:doc.convId,
@@ -66,14 +66,14 @@ module.exports = async(client,doc)=>{
             body:doc.message,
             timestamp:timestamp
         }),
-        client
+        client.db('User-Data')
         .collection('User-Info')
         .updateOne({userId:recieverInfo.userId,
                 "pastConv":{$elemMatch:{convId:doc.convId}}},
                 {$set:{"pastConv.$.lastUsed":timestamp}}
         ),
 
-        client
+        client.db('User-Data')
         .collection('User-Info')
         .updateOne({userId:senderInfo.userId,
                 "pastConv":{$elemMatch:{convId:doc.convId}}},

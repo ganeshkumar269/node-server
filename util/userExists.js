@@ -3,7 +3,7 @@ var Mongoclient = require('mongodb').MongoClient;
 
 module.exports = async (client,username)=>{
     try{
-        return client
+        return client.db('User-Data')
         .collection("Credentials")
         .find({"username":username},{_id:0,userId:0,hashedPassword:0})
         .limit(1)

@@ -17,7 +17,7 @@ module.exports = async (client,participants) =>{
     console.log("createConversation.js: Request arrived for :" + participants)
     try{
         var conv = new Conversation(participants).json();
-        await client
+        await client.db('User-Data')
                 .collection('Conversations')
                 .insertOne(conv)
         return conv

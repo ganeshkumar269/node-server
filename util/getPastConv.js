@@ -6,7 +6,7 @@ var getUserInfo = require('@getUserInfo')
 module.exports = async (client,username)=>{
     try{
         var user = await getUserInfo(client,username)
-        var res = await clients
+        var res = await clients.db('User-Data')
                         .collection('User-Info')
                         .find({userId:user.userId})
                         .limit(1)

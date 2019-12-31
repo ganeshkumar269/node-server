@@ -13,12 +13,11 @@ var ddos = new Ddos({burst:5, limit:15})
 //importing utility functions
 var authorize = require('./util/authorizeHeadersForExpress.js')
 var uri = require("@mymongodbURI")
-var options = { promiseLibrary: Promise,
+var options = { 
+                promiseLibrary: Promise,
                 useNewUrlParser:true,
                 keepAlive: 1, 
-                connectTimeoutMS: 30000, 
-                reconnectTries: 30, 
-                reconnectInterval: 5000
+                useUnifiedTopology: true
               }
 var client = new MongoClient(uri, options)
 
@@ -50,13 +49,12 @@ app.options("*",cors())
 //     next();
 // })
 
-
 //GET methods
 app.get('/',async (q,s) => {
     console.log("Home Page Request Arrived")
     s.send("<h1>Hello, World!</h1>")
 })
-app.get('/api/v1/getMessages',splitToken,getMessagesHandler);
+app.get('/api/v1/getMessages',splitToken,getMessagesHandler,);
 app.get('/api/v1/ping',splitToken,pingHandler);
 
 
@@ -70,7 +68,7 @@ app.post('/api/v1/sendMessage',splitToken,sendMessageHandler);
 client.connect()
   .catch(err => console.error(err.stack))
   .then(db => {
-    app.locals.db = client.db('User-Data');
+    app.locals.db = client
     app.listen(process.env.PORT || 3000, () => {
       console.log(`Node.js app is listening at http://localhost:3000`);
     });

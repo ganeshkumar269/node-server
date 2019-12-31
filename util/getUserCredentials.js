@@ -13,7 +13,7 @@ var uri = require("@mymongodbURI")
 
 
 module.exports = async (client,username)=>{   
-    return client
+    return client.db('User-Data')
     .collection('Credentials')
     .find({"username":username},{_id:0,userId:0})
     .limit(1).toArray()

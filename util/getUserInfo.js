@@ -15,7 +15,7 @@ var uri = require("@mymongodbURI")
 module.exports = async (client,username)=>{
     console.log("UserInfo Request arrived for "+ username)
     try{
-        var user = await client
+        var user = await client.db('User-Data')
                         .collection('User-Info')
                         .find({"username":username},{_id:0})
                         .limit(1)

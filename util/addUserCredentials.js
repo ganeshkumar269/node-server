@@ -4,7 +4,7 @@ var uri = require("@mymongodbURI")
 // const client = new MongoClient(uri,{useNewUrlParser:true,useUnifiedTopology: true });
 
 module.exports = async (client,user)=>{
-    client
+    client.db('User-Data')
     .collection("Credentials")
     .insertOne(user)
     .then(msg=>{

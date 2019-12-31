@@ -33,7 +33,7 @@ module.exports = async (request,response)=>{ // request.username , header.author
                 response.json({status:500})
             }
         }else {
-            client
+            client.db('User-Data')
             .collection('Messages')
             .find({"convId" : convId})
             .limit(100)
