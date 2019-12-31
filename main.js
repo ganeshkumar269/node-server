@@ -13,14 +13,14 @@ var ddos = new Ddos({burst:5, limit:15})
 //importing utility functions
 var authorize = require('./util/authorizeHeadersForExpress.js')
 var uri = require("@mymongodbURI")
-var options = { 
-                promiseLibrary: Promise,
-                useNewUrlParser:true,
-                keepAlive: 1, 
-                useUnifiedTopology: true
-              }
-var client = new MongoClient(uri, options)
-
+// var options = { 
+//                 promiseLibrary: Promise,
+//                 useNewUrlParser:true,
+//                 keepAlive: 1, 
+//                 useUnifiedTopology: true
+//               }
+// var client = new MongoClient(uri, options)
+var getDb = require("./db.js")
 
 //importing route handlers
 var createHandler = require('./routes/create.js')
@@ -54,22 +54,25 @@ app.get('/',async (q,s) => {
     console.log("Home Page Request Arrived")
     s.send("<h1>Hello, World!</h1>")
 })
-app.get('/api/v1/getMessages',splitToken,getMessagesHandler,);
-app.get('/api/v1/ping',splitToken,pingHandler);
+app.get('/api/v1/getMessages',getDb,splitToken,getMessagesHandler,);
+app.get('/api/v1/ping',getDb,splitToken,pingHandler);
 
 
 //POST methods
-app.post('/api/v1/create',createHandler);
-app.post('/api/v1/login',loginHandler);
-app.post('/api/v1/sendMessage',splitToken,sendMessageHandler);
+app.post('/api/v1/create',getDb,createHandler);
+app.post('/api/v1/login',getDb,loginHandler);
+app.post('/api/v1/sendMessage',getDb,splitToken,sendMessageHandler);
 
 
 //Listener
-client.connect()
-  .catch(err => console.error(err.stack))
-  .then(db => {
-    app.locals.db = client
-    app.listen(process.env.PORT || 3000, () => {
-      console.log(`Node.js app is listening at http://localhost:3000`);
-    });
-  });
+app.listen(process.env.PORT || 3000, () => console.log(`Node.js app is listening at http://localhost:3000`))
+
+
+// client.connect()
+//   .catch(err => console.error(err.stack))
+//   .then(db => {
+//     app.locals.db = client
+//     app.listen(process.env.PORT || 3000, () => {
+//       console.log(`Node.js app is listening at http://localhost:3000`);
+//     });
+//   });

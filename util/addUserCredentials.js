@@ -9,7 +9,7 @@ module.exports = async (client,user)=>{
     .insertOne(user)
     .then(msg=>{
             console.log(`Successfully inserted ${user.username} credentials`)
-            client
+            client.db('User-Data')
             .collection('User-Info')
             .insertOne({
                 userId:user.userId,
