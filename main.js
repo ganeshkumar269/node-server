@@ -14,7 +14,8 @@ var ddos = new Ddos({burst:5, limit:15})
 var authorize = require('./util/authorizeHeadersForExpress.js')
 var uri = require("@mymongodbURI")
 var options = { 
-                useNewUrlParser:true
+                useNewUrlParser:true,
+                useUnifiedTopology:true
               }
 var client = new MongoClient(uri, options)
 var getDb = require("./db.js")
