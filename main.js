@@ -14,9 +14,7 @@ var ddos = new Ddos({burst:5, limit:15})
 var authorize = require('./util/authorizeHeadersForExpress.js')
 var uri = require("@mymongodbURI")
 var options = { 
-                promiseLibrary: Promise,
                 useNewUrlParser:true,
-                keepAlive: 1, 
                 useUnifiedTopology: true
               }
 var client = new MongoClient(uri, options)
@@ -69,11 +67,9 @@ app.post('/api/v1/sendMessage',getDb,splitToken,sendMessageHandler);
 
 
 client.connect()
-  .catch(err => console.error(err.stack))
-  .then(db => {
-    console.log("Connected to DB")
-    app.locals.db = db
-    app.listen(process.env.PORT || 3000, () => {
-      console.log(`Node.js app is listening at http://localhost:3000`);
-    });
-  });
+    .then(db => {
+        console.log("Connected to DB")
+        app.locals.db = db
+        app.listen(process.env.PORT || 3000, () => {console.log(`Node.js app is listening at http://localhost:3000`)})
+    })
+    .catch(err => console.error(err.stack))

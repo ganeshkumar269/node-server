@@ -1,8 +1,6 @@
 var uri = require("@mymongodbURI")
 var options = { 
-                promiseLibrary: Promise,
                 useNewUrlParser:true,
-                keepAlive: 1, 
                 useUnifiedTopology: true
               }
 var MongoClient = require('mongodb').MongoClient
