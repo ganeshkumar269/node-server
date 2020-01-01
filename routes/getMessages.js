@@ -50,7 +50,7 @@ module.exports = async (request,response)=>{ // request.username , header.author
                         'messages' : []
                     }
                     res.forEach(element => {
-                        if(element.timestamp > timestamp)messageJSON['messages'].push(element.body);
+                        if(element.timestamp > recvTimeStamp)messageJSON['messages'].push(element.body);
                     })
                     console.log("getMessages.js: Retrieved Messages succesfully")
                     response.json({status:200,message:"Retrieved Messages succesfully",data:messageJSON})
