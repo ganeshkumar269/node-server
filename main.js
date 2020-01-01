@@ -13,13 +13,13 @@ var ddos = new Ddos({burst:5, limit:15})
 //importing utility functions
 var authorize = require('./util/authorizeHeadersForExpress.js')
 var uri = require("@mymongodbURI")
-// var options = { 
-//                 promiseLibrary: Promise,
-//                 useNewUrlParser:true,
-//                 keepAlive: 1, 
-//                 useUnifiedTopology: true
-//               }
-// var client = new MongoClient(uri, options)
+var options = { 
+                promiseLibrary: Promise,
+                useNewUrlParser:true,
+                keepAlive: 1, 
+                useUnifiedTopology: true
+              }
+var client = new MongoClient(uri, options)
 var getDb = require("./db.js")
 
 //importing route handlers
@@ -65,14 +65,15 @@ app.post('/api/v1/sendMessage',getDb,splitToken,sendMessageHandler);
 
 
 //Listener
-app.listen(process.env.PORT || 3000, () => console.log(`Node.js app is listening at http://localhost:3000`))
+// app.listen(process.env.PORT || 3000, () => console.log(`Node.js app is listening at http://localhost:3000`))
 
 
-// client.connect()
-//   .catch(err => console.error(err.stack))
-//   .then(db => {
-//     app.locals.db = client
-//     app.listen(process.env.PORT || 3000, () => {
-//       console.log(`Node.js app is listening at http://localhost:3000`);
-//     });
-//   });
+client.connect()
+  .catch(err => console.error(err.stack))
+  .then(db => {
+    console.log("Connected to DB")
+    app.locals.db = db
+    app.listen(process.env.PORT || 3000, () => {
+      console.log(`Node.js app is listening at http://localhost:3000`);
+    });
+  });

@@ -6,7 +6,7 @@ var options = {
                 useUnifiedTopology: true
               }
 var MongoClient = require('mongodb').MongoClient
-var client = new MongoClient(uri, options)
+var client;
 
 var getDb = async (req,res,next)=>{
     if(req.app.locals.db){
@@ -14,6 +14,7 @@ var getDb = async (req,res,next)=>{
         next()
     }
     else{
+        client = new MongoClient(uri, options)
         console.log("DB connection doesnt exists, reconnecting")
         client.connect()
         .then(db=>{
