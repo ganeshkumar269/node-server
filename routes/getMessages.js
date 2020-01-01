@@ -23,7 +23,7 @@ module.exports = async (request,response)=>{ // request.username , header.author
     response.setHeader('Content-Type','application/json')
     const token = request.token
     var recvTimestamp = request.headers['timestamp'] || 0
-    console.log("getMessages.js: recvTimeStamp " + recvTimestamp)
+    console.log("getMessages.js: recvTimestamp " + recvTimestamp)
     const convId = request.headers['convid']
     try {
         var authData = jwt.verify(token,"secretkey") 
@@ -50,7 +50,7 @@ module.exports = async (request,response)=>{ // request.username , header.author
                         'messages' : []
                     }
                     res.forEach(element => {
-                        if(element.timestamp > recvTimeStamp)messageJSON['messages'].push(element.body);
+                        if(element.timestamp > recvTimestamp)messageJSON['messages'].push(element.body);
                     })
                     console.log("getMessages.js: Retrieved Messages succesfully")
                     response.json({status:200,message:"Retrieved Messages succesfully",data:messageJSON})
