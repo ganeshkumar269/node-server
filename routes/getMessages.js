@@ -38,7 +38,7 @@ module.exports = async (request,response)=>{ // request.username , header.author
         }else {
             client.db('User-Data')
             .collection('Messages')
-            .find({"convId" : convId,"timestamp" : {$gt:recvTimeStamp}})
+            .find({"convId" : convId,"timestamp" : {$gt:recvTimestamp}})
             .limit(100)
             .toArray()
             .then(res=>{
