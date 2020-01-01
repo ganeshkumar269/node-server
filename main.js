@@ -50,7 +50,7 @@ app.options("*",cors())
 // })
 
 //GET methods
-app.get('/',async (q,s) => {
+app.get('/',(q,s) => {
     console.log("Home Page Request Arrived")
     s.send("<h1>Hello, World!</h1>")
 })
