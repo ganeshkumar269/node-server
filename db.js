@@ -13,10 +13,18 @@ var getDb = async (req,res,next)=>{
         console.log("DB connection exists")
         next()
     }
-    console.log("DB connection doesnt exists, reconnecting")
-    await client.connect()
-    req.app.locals.db = client
-    next()
+    else{
+        console.log("DB connection doesnt exists, reconnecting")
+        client.connect()
+        .then(db=>{
+            req.app.locals.db = db
+            next()
+        })
+        .catch(err=>{
+            console.log("GetDb: Failed to Connect To Db, err " + err)
+            res.json({status:500})
+        })
+    }
 }
 
 module.exports = getDb
