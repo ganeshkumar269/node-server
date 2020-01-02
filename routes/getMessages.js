@@ -22,8 +22,8 @@ module.exports = async (request,response)=>{ // request.username , header.author
     const client = request.app.locals.db
     response.setHeader('Content-Type','application/json')
     const token = request.token
-    var recvTimestamp = request.headers['timestamp'] || 0
-    console.log("getMessages.js: recvTimestamp " + recvTimestamp)
+    var recvTimestamp = parseInt(request.headers['timestamp'] || 0, 10) 
+    console.log("getMessages.js: recvTimestamp " + typeof(recvTimestamp) + " " + recvTimestamp)
     const convId = request.headers['convid']
     try {
         var authData = jwt.verify(token,"secretkey") 
@@ -38,7 +38,7 @@ module.exports = async (request,response)=>{ // request.username , header.author
         }else {
             client.db('User-Data')
             .collection('Messages')
-            .find({"convId" : convId,"timestamp" : {$gt:recvTimestamp}})
+            .find({"timestamp":{$gt:recvTimestamp}, "convId" : convId})
             .limit(100)
             .toArray()
             .then(res=>{
