@@ -1,4 +1,4 @@
-var jwt = require('../node_modules/jsonwebtoken')
+var jwt = require('jsonwebtoken')
 
 module.exports = (request,response)=>{
     response.setHeader('Content-Type','application/json');

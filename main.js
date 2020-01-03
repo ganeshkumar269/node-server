@@ -11,8 +11,9 @@ var ddos = new Ddos({burst:5, limit:15})
 
 
 //importing utility functions
+var config = require("@config")
+const uri = config.DB_URI
 var authorize = require('./util/authorizeHeadersForExpress.js')
-var uri = require("@mymongodbURI")
 var options = { 
                 useNewUrlParser:true,
                 useUnifiedTopology:true

@@ -1,4 +1,5 @@
-var uri = require("@mymongodbURI")
+var config = require("@config")
+const uri = config.DB_URI
 var options = { 
                 useNewUrlParser:true,
                 useUnifiedTopology: true

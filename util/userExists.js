@@ -1,5 +1,3 @@
-var uri = require('@mymongodbURI');
-var Mongoclient = require('mongodb').MongoClient;
 
 module.exports = async (client,username)=>{
     try{

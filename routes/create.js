@@ -5,7 +5,7 @@ var MongoClient = require('mongodb').MongoClient;
 var bodyParser = require('body-parser');
 
 //importing custom files
-var config = reqire('@config')
+var config = require('@config')
 var userExists = require('@userExists');
 var addUserCredentials = require('@addUserCredentials')
 
