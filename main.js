@@ -19,7 +19,7 @@ var options = {
                 useUnifiedTopology:true
               }
 var client = new MongoClient(uri, options)
-var getDb = require("./db.js")
+var getDb = require("@dbHandler")
 
 //importing route handlers
 var createHandler = require('./routes/create.js')

@@ -42,6 +42,7 @@
     "@getUserCredentials": "util/getUserCredentials.js",
     "@authenticateUser": "util/authenticateUser.js",
     "@createMessage": "util/createMessage.js",
-    "@config":"config.js"
+    "@config":"config.js",
+    "@dbHandler":"middlewares/dbHandler.js"
   }
 }
