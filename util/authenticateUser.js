@@ -6,7 +6,8 @@ var MongoClient = require('mongodb').MongoClient;
 
 //importing custom files
 var getUserCredentials = require("@getUserCredentials")
-var uri = require("@mymongodbURI")
+var config = require("@config")
+const uri = config.DB_URI
 var stringHasher = require('@stringHasher')
 
 

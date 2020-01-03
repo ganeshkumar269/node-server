@@ -6,8 +6,8 @@ var MongoClient = require('mongodb').MongoClient;
 
 
 //importing custom files
-var uri = require("@mymongodbURI")
-
+var config = require("@config")
+const uri = config.DB_URI
 
 //declaring app variables
 

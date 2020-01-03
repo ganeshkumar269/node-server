@@ -1,6 +1,7 @@
 require('module-alias/register')
 var MongoClient = require('mongodb').MongoClient;
-var uri = require("@mymongodbURI")
+var config = require("@config")
+const uri = config.DB_URI
 var getUserInfo = require('@getUserInfo')
 
 module.exports = async (client,username,timestamp)=>{

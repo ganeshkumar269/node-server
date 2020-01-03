@@ -5,9 +5,11 @@ var MongoClient = require('mongodb').MongoClient;
 var bodyParser = require('body-parser');
 
 //importing custom files
+var config = reqire('@config')
 var userExists = require('@userExists');
 var addUserCredentials = require('@addUserCredentials')
-var uri = require("@mymongodbURI")
+
+var uri = config.DB_URI
 var stringHasher = require('@stringHasher')
 
 //Declaring App variables

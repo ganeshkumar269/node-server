@@ -1,5 +1,6 @@
 require('module-alias/register')
-var uri = require("@mymongodbURI")
+var config = require("@config")
+const uri = config.DB_URI 
 
 // const client = new MongoClient(uri,{useNewUrlParser:true,useUnifiedTopology: true });
 

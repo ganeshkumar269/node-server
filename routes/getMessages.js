@@ -7,7 +7,8 @@ var jwt = require('jsonwebtoken');
 
 
 //importing custom files
-var uri = require("@mymongodbURI")
+var config = require("@config")
+const uri = config.DB_URI
 var userExists = require('@userExists')
 var convExists = require('@conversationExists')
 var getPastConv = require('@getPastConv')

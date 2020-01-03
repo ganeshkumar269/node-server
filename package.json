@@ -23,6 +23,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "ddos": "^0.2.1",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "module-alias": "^2.2.2",
@@ -30,7 +31,6 @@
     "mongoose": "^5.8.3"
   },
   "_moduleAliases": {
-    "@mymongodbURI": "util/mymongodbURI.js",
     "@createConversation": "util/createConversation.js",
     "@getUserInfo": "util/getUserInfo.js",
     "@userExists": "util/userExists",
@@ -41,6 +41,7 @@
     "@stringHasher": "util/stringHasher.js",
     "@getUserCredentials": "util/getUserCredentials.js",
     "@authenticateUser": "util/authenticateUser.js",
-    "@createMessage": "util/createMessage.js"
+    "@createMessage": "util/createMessage.js",
+    "@config":"config.js"
   }
 }

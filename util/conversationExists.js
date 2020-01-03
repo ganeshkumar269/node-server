@@ -1,7 +1,8 @@
 var MongoClient = require('mongodb').MongoClient;
 var ObjectID  = require('mongodb').ObjectID
 
-var uri = require("@mymongodbURI")
+var config = require("@config")
+const uri = config.DB_URI
 var userExists = require('@userExists')
 
 module.exports = async (client,sender,reciever)=>{

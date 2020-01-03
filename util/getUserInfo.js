@@ -6,8 +6,8 @@ var ObjectID  = require('mongodb').ObjectID
 
 
 //importing custom files
-var uri = require("@mymongodbURI")
-
+var config = require("@config")
+const uri = config.DB_URI
 
 //declaring app variables
 
