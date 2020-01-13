@@ -5,21 +5,21 @@ var Ddos = require('ddos')
 var cors = require('cors')
 var MongoClient = require('mongodb').MongoClient
 
-// App variables
-var app = express();
-var ddos = new Ddos({burst:5, limit:15})
 
 
 //importing utility functions
 var config = require("@config")
+
+
+
+// App variables
+var app = express();
+var ddos = new Ddos({burst:5, limit:15})
 const uri = config.DB_URI
-var authorize = require('./util/authorizeHeadersForExpress.js')
-var options = { 
-                useNewUrlParser:true,
-                useUnifiedTopology:true
-              }
 var client = new MongoClient(uri, options)
-var getDb = require("@dbHandler")
+var options = { useNewUrlParser:true,useUnifiedTopology:true}
+
+
 
 //importing route handlers
 var createHandler = require('./routes/create.js')
@@ -31,6 +31,9 @@ var pingHandler = require('./routes/ping.js')
 
 //importing middlewares
 var splitToken = require('./middlewares/splitToken.js')
+var dbHandler = require("@dbHandler")
+
+
 
 
 //express handles
@@ -39,34 +42,23 @@ app.use(bodyParser.urlencoded({extended : true}))
 app.use(cors())
 app.options("*",cors())
 
-// app.use((req,res,next)=>{
-//     res.header("Access-Control-Allow-Origin","*")
-//     req.header("Access-Control-Allow-Methods","GET,POST,PUT,DELETE,PATCH,OPTIONS")
-//     res.header("Access-Control-Allow-Headers","Origin,X-Requested-With,Content-Type,Accept,Authorization");
-//     req.header("Access-Control-Allow-Origin","*")
-//     req.header("Access-Control-Allow-Headers","Origin,X-Requested-With,Content-Type,Accept,Authorization");
-//     next();
-// })
 
 //GET methods
 app.get('/',(q,s) => {
     console.log("Home Page Request Arrived")
     s.send("<h1>Hello, World!</h1>")
 })
-app.get('/api/v1/getMessages',getDb,splitToken,getMessagesHandler,);
-app.get('/api/v1/ping',getDb,splitToken,pingHandler);
+app.get('/api/v1/getMessages',dbHandler,splitToken,getMessagesHandler,);
+app.get('/api/v1/ping',dbHandler,splitToken,pingHandler);
 
 
 //POST methods
-app.post('/api/v1/create',getDb,createHandler);
-app.post('/api/v1/login',getDb,loginHandler);
-app.post('/api/v1/sendMessage',getDb,splitToken,sendMessageHandler);
+app.post('/api/v1/create',dbHandler,createHandler);
+app.post('/api/v1/login',dbHandler,loginHandler);
+app.post('/api/v1/sendMessage',dbHandler,splitToken,sendMessageHandler);
 
 
 //Listener
-// app.listen(process.env.PORT || 3000, () => console.log(`Node.js app is listening at http://localhost:3000`))
-
-
 client.connect()
     .then(db => {
         console.log("Connected to DB")
