@@ -13,35 +13,44 @@ var createMessage = require("@createMessage")
 
 module.exports = async (request,response)=>{
     const client = request.app.locals.db
+    var convId = request.headers['convid'] 
     try{
         var authData = jwt.verify(request.token,"secretkey")
     }catch(err){
         console.log("sendMessage.js: err, "+err)
         response.json({status:400,message:"Invalid Token"})
     }
-    try{
-        var t = await userExists(client,request.body.username)
-    }catch(err){
-        console.log("sendMessage.js: await userExists, err " + err)
-        response.json({status:500})
-    }
-    if(t == true){
-        var t = request.headers['convid']
-        var doc = {
-            convId:t,
-            sender:authData.user.username,
-            reciever:request.body.username,
-            message:request.body.message
+    if(convid == undefined){
+        console.log("sendMessage.js: undefined convid")
+        if(username != undefined){
+            try{
+                var t = await userExists(client,request.body.username)
+                if(t == false){
+                    console.log("sendMessage.js: Username doesnt exist")
+                    response.json({status:400})
+                }
+            }catch(err){
+                console.log("sendMessage.js: await userExists, err " + err)
+                response.json({status:500})
+            }
         }
-        try{
-            var convId = await createMessage(client,doc);
-            response.json({status:200,convId:convId})
-        }catch(err){
-            console.log("sendMessage.js: Error in createMessage, err " + err)
-            response.json({status:500})    
-        } 
-    }else{  // r-user doesnt exist
-        console.log("sendMessages.js:R-User doenst exist")
-        response.json({status:401,message:"R-User Doesnt Exist"})
+        else {
+            console.log("sendMessage.js: undefined Username")
+            response.json({status:400})
+        }
     }
+
+    var doc = {
+        convId:convId,
+        sender:authData.user.username,
+        reciever:request.body.username,
+        message:request.body.message
+    }
+    try{
+        var convId = await createMessage(client,doc);
+        response.json({status:200,convId:convId})
+    }catch(err){
+        console.log("sendMessage.js: Error in createMessage, err " + err)
+        response.json({status:500})    
+    } 
 }
