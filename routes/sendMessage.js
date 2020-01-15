@@ -20,7 +20,7 @@ module.exports = async (request,response)=>{
         console.log("sendMessage.js: err, "+err)
         response.json({status:400,message:"Invalid Token"})
     }
-    if(convid == undefined){
+    if(convId == undefined){
         console.log("sendMessage.js: undefined convid")
         if(username != undefined){
             try{
