@@ -22,7 +22,7 @@ module.exports = async (request,response)=>{
     }
     if(convId == undefined){
         console.log("sendMessage.js: undefined convid")
-        if(username != undefined){
+        if(request.body.username != undefined){
             try{
                 var t = await userExists(client,request.body.username)
                 if(t == false){
