@@ -22,11 +22,11 @@ module.exports = async (request,response)=>{
     }
     if(convId == undefined){
         console.log("sendMessage.js: undefined convid")
-        if(request.body.username != undefined){
+        if(request.body.participants != undefined){
             try{
-                var t = await userExists(client,request.body.username)
+                var t = await userExists(client,request.body.participants[0])
                 if(t == false){
-                    console.log("sendMessage.js: Username doesnt exist")
+                    console.log("sendMessage.js: participants doesnt exist")
                     response.json({status:400})
                 }
             }catch(err){
@@ -43,7 +43,7 @@ module.exports = async (request,response)=>{
     var doc = {
         convId:convId,
         sender:authData.user.username,
-        reciever:request.body.username,
+        participants:request.body.participants,
         message:request.body.message
     }
     try{

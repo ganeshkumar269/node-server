@@ -16,8 +16,8 @@ var config = require("@config")
 var app = express();
 var ddos = new Ddos({burst:5, limit:15})
 const uri = config.DB_URI
-var client = new MongoClient(uri, options)
 var options = { useNewUrlParser:true,useUnifiedTopology:true}
+var client = new MongoClient(uri, options)
 
 
 
@@ -41,12 +41,12 @@ app.use(ddos.express)
 app.use(bodyParser.urlencoded({extended : true}))
 app.use(cors())
 app.options("*",cors())
-
+app.use(express.static('public'))
 
 //GET methods
 app.get('/',(q,s) => {
     console.log("Home Page Request Arrived")
-    s.send("<h1>Hello, World!</h1>")
+    s.send('index.html')
 })
 app.get('/api/v1/getMessages',dbHandler,splitToken,getMessagesHandler,);
 app.get('/api/v1/ping',dbHandler,splitToken,pingHandler);

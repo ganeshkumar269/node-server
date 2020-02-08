@@ -1,11 +1,13 @@
 var ObjectID  = require('mongodb').ObjectID;
 
 class Conversation {
-    constructor(participants){
+    constructor(creatorUserId , participants){
         this._convId = new ObjectID().toHexString()
         this._createdAt = Date.now()
-        this._creatorId = participants[0]
-        this._participants = participants
+        this._creatorId = creatorUserId
+        this._participants = []
+        this._participants.forEach(el=>_participants.push(el))
+        this._lastUsed = Date.now()
     }
 
     get convId(){
@@ -21,6 +23,9 @@ class Conversation {
     get participants(){
         return this._participants
     }
+    get lastUsed(){
+        return this._lastUsed
+    }
     set convId(x){
         this._convId = x
     }
@@ -33,6 +38,9 @@ class Conversation {
     set participants(x){
         this._participants = x
     }
+    set lastUsed(x){
+        this._lastUsed = x
+    }
     addParticipant(x){
         this._participants.push(x)
     }
@@ -41,7 +49,8 @@ class Conversation {
             convId :this._convId,
             createdAt : this._createdAt,
             creatorId : this._creatorId,
-            _participants : this._participants 
+            participants : this._participants,
+            lastUsed : this._lastUsed
         }
     }
 } 
